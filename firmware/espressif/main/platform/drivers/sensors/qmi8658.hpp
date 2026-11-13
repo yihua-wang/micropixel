@@ -28,7 +28,7 @@ class Qmi8658 final {
         Kind kind_;
     };
 
-    Qmi8658() = default;
+    explicit Qmi8658(uint8_t address = 0x6aU) : address_(address) {}
     Qmi8658(const Qmi8658&) = delete;
     Qmi8658& operator=(const Qmi8658&) = delete;
     ~Qmi8658();
@@ -47,6 +47,7 @@ class Qmi8658 final {
     [[nodiscard]] static uint8_t GyroscopeOdr(uint32_t interval_us);
 
     i2c_master_dev_handle_t device_{};
+    const uint8_t address_;
     uint8_t acceleration_control_{0x16U};
     uint8_t angular_velocity_control_{0x66U};
     bool acceleration_active_{};

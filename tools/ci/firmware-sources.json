@@ -15,6 +15,7 @@
     "m5stack-tab5",
     "esp-mosaico",
     "esp-box-3",
+    "esp32-s3-nanopod",
     "szpi-esp32s3",
     "m5stack-cores3",
     "sensecap-watcher"

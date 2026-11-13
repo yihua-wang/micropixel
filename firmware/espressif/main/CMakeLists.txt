@@ -21,7 +21,7 @@ if(CONFIG_MICROPIXEL_BOARD_ESP32_S3_BOX_3 OR CONFIG_MICROPIXEL_BOARD_SZPI_ESP32S
         "${micropixel_builtin_font_source_dir}/font_builtin_latin_12.c"
         "${micropixel_builtin_font_source_dir}/font_builtin_latin_14.c"
         "${micropixel_builtin_font_source_dir}/font_builtin_latin_18.c")
-elseif(CONFIG_MICROPIXEL_BOARD_ESP_MOSAICO)
+elseif(CONFIG_MICROPIXEL_BOARD_ESP_MOSAICO OR CONFIG_MICROPIXEL_BOARD_ESP32_S3_NANOPOD)
     set(micropixel_builtin_font_sources
         "${micropixel_builtin_font_source_dir}/font_builtin_latin_14.c"
         "${micropixel_builtin_font_source_dir}/font_builtin_latin_16.c"
@@ -85,7 +85,7 @@ else()
         "${CMAKE_CURRENT_LIST_DIR}/platform/lvgl/fonts/vendor/Montserrat-Medium.ttf" BINARY)
 endif()
 if(CONFIG_MICROPIXEL_BOARD_ESP32_S3_BOX_3 OR CONFIG_MICROPIXEL_BOARD_SZPI_ESP32S3 OR
-   CONFIG_MICROPIXEL_BOARD_M5STACK_CORES3)
+ CONFIG_MICROPIXEL_BOARD_ESP32_S3_NANOPOD OR CONFIG_MICROPIXEL_BOARD_M5STACK_CORES3)
     # Compact ESP32-S3 boards allocate the LVGL object pool from PSRAM at lv_init(). Their explicit
     # caps allocator avoids relying on target-specific external-BSS placement.
     target_include_directories(${micropixel_lvgl_lib} PRIVATE
@@ -146,50 +146,50 @@ file(GLOB_RECURSE micropixel_lvgl_symbol_sources CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_LIST_DIR}/platform/lvgl/*.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/platform/lvgl/*.h"
     "${CMAKE_CURRENT_LIST_DIR}/platform/lvgl/*.hpp")
-set(micropixel_builtin_font_report
-    "${CMAKE_CURRENT_BINARY_DIR}/generated/fonts/builtin-latin-v1-report.json")
-set(micropixel_builtin_font_command
-    "${micropixel_python}" "${CMAKE_CURRENT_LIST_DIR}/../../../tools/generate_builtin_fonts.py"
-    --profile "${micropixel_builtin_font_profile}"
-    --host-catalog-report "${micropixel_host_i18n_report}"
-    --montserrat "${micropixel_lvgl_font_source_dir}/Montserrat-Medium.ttf"
-    --replacement-font "${micropixel_lvgl_font_source_dir}/DejaVuSans.ttf"
-    --symbol-font "${micropixel_lvgl_font_source_dir}/FontAwesome5-Solid+Brands+Regular.woff"
-    --lvgl-symbol-def "${micropixel_lvgl_symbol_def}"
-    --lvgl-symbol-source "${CMAKE_CURRENT_LIST_DIR}/host/ui"
-    --lvgl-symbol-source "${CMAKE_CURRENT_LIST_DIR}/platform/lvgl"
-    --lvgl-symbol-source "${micropixel_lvgl_keyboard_source}"
-    --lvgl-symbol-source "${micropixel_lvgl_dropdown_source}"
-    --sdk-symbol-source "${micropixel_guest_sdk_symbol_source}"
-    --output-dir "${micropixel_builtin_font_source_dir}"
-    --report "${micropixel_builtin_font_report}"
-)
-# Ordinary builds validate the checked-in sources without Node.js or npm.
-add_custom_command(
-    OUTPUT "${micropixel_builtin_font_report}"
-    COMMAND ${micropixel_builtin_font_command} --check
-    DEPENDS "${CMAKE_CURRENT_LIST_DIR}/../../../tools/generate_builtin_fonts.py"
-            "${micropixel_builtin_font_profile}"
-            "${micropixel_host_i18n_report}"
-            "${micropixel_lvgl_font_source_dir}/Montserrat-Medium.ttf"
-            "${micropixel_lvgl_font_source_dir}/DejaVuSans.ttf"
-            "${micropixel_lvgl_font_source_dir}/FontAwesome5-Solid+Brands+Regular.woff"
-            "${micropixel_lvgl_symbol_def}"
-            "${micropixel_lvgl_keyboard_source}"
-            "${micropixel_lvgl_dropdown_source}"
-            "${micropixel_guest_sdk_symbol_source}"
-            ${micropixel_lvgl_symbol_sources}
-            ${micropixel_builtin_font_all_sources}
-    VERBATIM
-)
-add_custom_target(micropixel_builtin_fonts DEPENDS "${micropixel_builtin_font_report}")
-add_dependencies(${COMPONENT_LIB} micropixel_builtin_fonts)
-# Maintainers explicitly regenerate these source assets when font inputs change.
-add_custom_target(micropixel_regenerate_builtin_fonts
-    COMMAND ${micropixel_builtin_font_command}
-    DEPENDS "${micropixel_host_i18n_report}"
-    VERBATIM
-)
+# set(micropixel_builtin_font_report
+#     "${CMAKE_CURRENT_BINARY_DIR}/generated/fonts/builtin-latin-v1-report.json")
+# set(micropixel_builtin_font_command
+#     "${micropixel_python}" "${CMAKE_CURRENT_LIST_DIR}/../../../tools/generate_builtin_fonts.py"
+#     --profile "${micropixel_builtin_font_profile}"
+#     --host-catalog-report "${micropixel_host_i18n_report}"
+#     --montserrat "${micropixel_lvgl_font_source_dir}/Montserrat-Medium.ttf"
+#     --replacement-font "${micropixel_lvgl_font_source_dir}/DejaVuSans.ttf"
+#     --symbol-font "${micropixel_lvgl_font_source_dir}/FontAwesome5-Solid+Brands+Regular.woff"
+#     --lvgl-symbol-def "${micropixel_lvgl_symbol_def}"
+#     --lvgl-symbol-source "${CMAKE_CURRENT_LIST_DIR}/host/ui"
+#     --lvgl-symbol-source "${CMAKE_CURRENT_LIST_DIR}/platform/lvgl"
+#     --lvgl-symbol-source "${micropixel_lvgl_keyboard_source}"
+#     --lvgl-symbol-source "${micropixel_lvgl_dropdown_source}"
+#     --sdk-symbol-source "${micropixel_guest_sdk_symbol_source}"
+#     --output-dir "${micropixel_builtin_font_source_dir}"
+#     --report "${micropixel_builtin_font_report}"
+# )
+# # Ordinary builds validate the checked-in sources without Node.js or npm.
+# add_custom_command(
+#     OUTPUT "${micropixel_builtin_font_report}"
+#     COMMAND ${micropixel_builtin_font_command} --check
+#     DEPENDS "${CMAKE_CURRENT_LIST_DIR}/../../../tools/generate_builtin_fonts.py"
+#             "${micropixel_builtin_font_profile}"
+#             "${micropixel_host_i18n_report}"
+#             "${micropixel_lvgl_font_source_dir}/Montserrat-Medium.ttf"
+#             "${micropixel_lvgl_font_source_dir}/DejaVuSans.ttf"
+#             "${micropixel_lvgl_font_source_dir}/FontAwesome5-Solid+Brands+Regular.woff"
+#             "${micropixel_lvgl_symbol_def}"
+#             "${micropixel_lvgl_keyboard_source}"
+#             "${micropixel_lvgl_dropdown_source}"
+#             "${micropixel_guest_sdk_symbol_source}"
+#             ${micropixel_lvgl_symbol_sources}
+#             ${micropixel_builtin_font_all_sources}
+#     VERBATIM
+# )
+# add_custom_target(micropixel_builtin_fonts DEPENDS "${micropixel_builtin_font_report}")
+# add_dependencies(${COMPONENT_LIB} micropixel_builtin_fonts)
+# # Maintainers explicitly regenerate these source assets when font inputs change.
+# add_custom_target(micropixel_regenerate_builtin_fonts
+#     COMMAND ${micropixel_builtin_font_command}
+#     DEPENDS "${micropixel_host_i18n_report}"
+#     VERBATIM
+# )
 
 target_compile_features(${COMPONENT_LIB} PRIVATE cxx_std_23)
 # ESP-IDF 6.1 defaults globally to the newest compiler mode (currently

@@ -9,6 +9,7 @@ MATRIX = [
     dict(profile='m5stack-tab5', chip='esp32p4', wrapper='tab5.sh build-host'),
     dict(profile='esp-mosaico', chip='esp32s31', wrapper='s31.sh build-host'),
     dict(profile='esp-box-3', chip='esp32s3', wrapper='s3.sh build-host'),
+    dict(profile='esp32-s3-nanopod', chip='esp32s3', wrapper='s3.sh build-host nanopod'),
     dict(profile='szpi-esp32s3', chip='esp32s3', wrapper='s3.sh build-szpi'),
     dict(profile='m5stack-cores3', chip='esp32s3', wrapper='s3.sh build-cores3'),
     dict(profile='sensecap-watcher', chip='esp32s3', wrapper='s3.sh build-host watcher'),

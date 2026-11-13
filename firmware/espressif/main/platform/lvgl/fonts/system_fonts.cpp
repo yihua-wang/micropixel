@@ -22,7 +22,7 @@ namespace {
 #if CONFIG_MICROPIXEL_BOARD_ESP32_S3_BOX_3 || CONFIG_MICROPIXEL_BOARD_SZPI_ESP32S3 || \
     CONFIG_MICROPIXEL_BOARD_M5STACK_CORES3
 constexpr std::array<int, 4> kSizes{10, 12, 14, 18};
-#elif CONFIG_MICROPIXEL_BOARD_ESP_MOSAICO
+#elif CONFIG_MICROPIXEL_BOARD_ESP_MOSAICO || CONFIG_MICROPIXEL_BOARD_ESP32_S3_NANOPOD
 constexpr std::array<int, 4> kSizes{14, 16, 20, 26};
 #else
 constexpr std::array<int, 4> kSizes{14, 18, 24, 32};

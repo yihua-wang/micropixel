@@ -206,6 +206,16 @@ menu "MicroPixel board backends"
             microphone, RTC, proximity sensor and SD card remain outside this
             board profile.
 
+    config MICROPIXEL_BOARD_ESP32_S3_NANOPOD
+        bool "ESP32-S3 NanoPod board profile"
+        depends on IDF_TARGET_ESP32S3
+        help
+            Bring up the 460x460 CO5300 QSPI display, CST820 touch, QMI8658
+            sensors, native Wi-Fi, Guest Graphics and App Hall. The reference
+            pin map assigns GPIO40 to both LCD enable and audio bit clock, so
+            audio, microphone, battery monitoring, buttons and SD card remain
+            outside this board profile until their hardware wiring is resolved.
+
     config MICROPIXEL_BOARD_SENSECAP_WATCHER
         bool "SenseCAP Watcher"
         depends on IDF_TARGET_ESP32S3
@@ -316,6 +326,16 @@ menu "MicroPixel board backends"
             Allocate two LVGL draw buffers so rendering can overlap display
             transfer. Board sdkconfig defaults must select this explicitly;
             the board backend does not force it.
+
+    config MICROPIXEL_S3_NANOPOD_LVGL_DOUBLE_BUFFER
+        bool "Use two LVGL partial buffers on ESP32-S3-NanoPod"
+        depends on MICROPIXEL_BOARD_ESP32_S3_NANOPOD
+        default n
+        help
+            Let CPU rendering overlap the previous QSPI transfer. This remains
+            partial rendering; it does not allocate two panel framebuffers.
+            Board sdkconfig defaults must select this explicitly when two
+            buffers are intended.
 
     config MICROPIXEL_APP_SURFACE_HW_MIN_AREA_PIXELS
         int "Minimum App Surface operation sent to PPA/DMA2D"

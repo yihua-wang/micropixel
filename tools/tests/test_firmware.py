@@ -54,6 +54,7 @@ class FirmwareProfileTest(unittest.TestCase):
                 "s31-null",
                 "s3-null",
                 "esp-box-3",
+                "esp32-s3-nanopod",
                 "szpi-esp32s3",
                 "m5stack-cores3",
                 "sensecap-watcher",
@@ -86,6 +87,8 @@ class FirmwareProfileTest(unittest.TestCase):
         self.assertFalse(self.profiles["p4-null"].monitor)
         self.assertTrue(self.profiles["esp-box-3"].flash)
         self.assertTrue(self.profiles["esp-box-3"].monitor)
+        self.assertTrue(self.profiles["esp32-s3-nanopod"].flash)
+        self.assertTrue(self.profiles["esp32-s3-nanopod"].monitor)
         self.assertTrue(self.profiles["szpi-esp32s3"].flash)
         self.assertTrue(self.profiles["szpi-esp32s3"].monitor)
         self.assertTrue(self.profiles["m5stack-cores3"].flash)
@@ -243,6 +246,11 @@ lv_mem_size_bytes=1572864
         )
         self.assertIn("sdkconfig.s3-box-3.defaults", preview_defaults)
         self.assertNotIn("sdkconfig.s3-null.defaults", preview_defaults)
+        nanopod_defaults = ";".join(
+            str(path) for path in self.profiles["esp32-s3-nanopod"].sdkconfig_defaults
+        )
+        self.assertIn("sdkconfig.s3-nanopod.defaults", nanopod_defaults)
+        self.assertNotIn("sdkconfig.s3-null.defaults", nanopod_defaults)
         szpi_defaults = ";".join(
             str(path) for path in self.profiles["szpi-esp32s3"].sdkconfig_defaults
         )

@@ -48,7 +48,7 @@ const lv_font_t* ProfileFont(SystemFontRole role) {
         default:
             return &font_builtin_latin_10;
     }
-#elif CONFIG_MICROPIXEL_BOARD_ESP_MOSAICO
+#elif CONFIG_MICROPIXEL_BOARD_ESP_MOSAICO || CONFIG_MICROPIXEL_BOARD_ESP32_S3_NANOPOD
     switch (role) {
         case SystemFontRole::kTitle:
             return &font_builtin_latin_26;

@@ -47,6 +47,15 @@ copy once the component is fixed upstream.
   `weight == 0` as zero points, so that a lift is only ever published from controller data;
 - license: Apache-2.0.
 
+## CST820 touch driver
+
+The ESP32-S3 NanoPod uses the `viewesmart/esp_lcd_touch_cst820` ESP Component Registry
+component, with the `^1.0.3` version constraint:
+
+- upstream: <https://github.com/VIEWESMART/Viewe-esp32-components/tree/main/touch/esp_lcd_touch_cst820>;
+- registry: <https://components.espressif.com/components/viewesmart/esp_lcd_touch_cst820>;
+- license: Apache-2.0.
+
 ## LLVM libc++ in Guest applications
 
 MicroPixel Guest applications are compiled with libc++ headers and selected static-library objects distributed by

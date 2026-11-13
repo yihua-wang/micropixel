@@ -7,12 +7,15 @@ s3_port_override="${S3_PORT:-}"
 s3_baud_override="${S3_BAUD:-}"
 szpi_port_override="${SZPI_S3_PORT:-}"
 szpi_baud_override="${SZPI_S3_BAUD:-}"
+nanopod_port_override="${NANOPOD_S3_PORT:-}"
+nanopod_baud_override="${NANOPOD_S3_BAUD:-}"
 cores3_port_override="${CORES3_S3_PORT:-}"
 cores3_baud_override="${CORES3_S3_BAUD:-}"
 watcher_port_override="${WATCHER_S3_PORT:-}"
 watcher_baud_override="${WATCHER_S3_BAUD:-}"
 s3_host_build_dir_override="${S3_HOST_BUILD_DIR:-}"
 szpi_host_build_dir_override="${SZPI_S3_HOST_BUILD_DIR:-}"
+nanopod_host_build_dir_override="${NANOPOD_S3_HOST_BUILD_DIR:-}"
 cores3_host_build_dir_override="${CORES3_S3_HOST_BUILD_DIR:-}"
 watcher_host_build_dir_override="${WATCHER_S3_HOST_BUILD_DIR:-}"
 s3_apps_output_dir_override="${S3_APPS_OUTPUT_DIR:-}"
@@ -42,6 +45,12 @@ fi
 if [[ -n "$szpi_baud_override" ]]; then
     SZPI_S3_BAUD="$szpi_baud_override"
 fi
+if [[ -n "$nanopod_port_override" ]]; then
+    NANOPOD_S3_PORT="$nanopod_port_override"
+fi
+if [[ -n "$nanopod_baud_override" ]]; then
+    NANOPOD_S3_BAUD="$nanopod_baud_override"
+fi
 if [[ -n "$cores3_port_override" ]]; then
     CORES3_S3_PORT="$cores3_port_override"
 fi
@@ -59,6 +68,9 @@ if [[ -n "$s3_host_build_dir_override" ]]; then
 fi
 if [[ -n "$szpi_host_build_dir_override" ]]; then
     SZPI_S3_HOST_BUILD_DIR="$szpi_host_build_dir_override"
+fi
+if [[ -n "$nanopod_host_build_dir_override" ]]; then
+    NANOPOD_S3_HOST_BUILD_DIR="$nanopod_host_build_dir_override"
 fi
 if [[ -n "$cores3_host_build_dir_override" ]]; then
     CORES3_S3_HOST_BUILD_DIR="$cores3_host_build_dir_override"
@@ -92,6 +104,7 @@ apps_output_dir="${S3_APPS_OUTPUT_DIR:-$workspace_root/build/esp32s3-apps}"
 apps_store="$apps_output_dir/app-store.bin"
 host_build_dir="${S3_HOST_BUILD_DIR:-$workspace_root/build/host-esp32s3-box-3}"
 szpi_host_build_dir="${SZPI_S3_HOST_BUILD_DIR:-$workspace_root/build/host-esp32s3-szpi}"
+nanopod_host_build_dir="${NANOPOD_S3_HOST_BUILD_DIR:-$workspace_root/build/host-esp32s3-nanopod}"
 cores3_host_build_dir="${CORES3_S3_HOST_BUILD_DIR:-$workspace_root/build/host-esp32s3-cores3}"
 watcher_host_build_dir="${WATCHER_S3_HOST_BUILD_DIR:-$workspace_root/build/host-esp32s3-watcher}"
 # The SenseCAP Watcher's app_store partition is 24 MiB, so its BundleFS geometry
@@ -105,7 +118,7 @@ usage() {
     cat <<'EOF'
 Usage: bash tools/s3.sh COMMAND [BOARD] [PORT] [--reset]
 
-Boards: box3 (default), szpi, cores3, watcher
+Boards: box3 (default), nanopod, szpi, cores3, watcher
 
 Common ESP32-S3 commands:
   build-null          Compile the ESP32-S3 hardware-independent Null gate.
@@ -139,7 +152,8 @@ Compatibility aliases:
   monitor-watcher [PORT] [--reset]
   port-watcher [PORT]
 
-S3_PORT/S3_BAUD, SZPI_S3_PORT/SZPI_S3_BAUD, CORES3_S3_PORT/CORES3_S3_BAUD,
+S3_PORT/S3_BAUD, NANOPOD_S3_PORT/NANOPOD_S3_BAUD,
+SZPI_S3_PORT/SZPI_S3_BAUD, CORES3_S3_PORT/CORES3_S3_BAUD,
 WATCHER_S3_PORT/WATCHER_S3_BAUD and MICROPIXEL_REMOTE_CONTROL_* may be set in
 the repository-root .env.
 Explicit environment variables and a command-line PORT take precedence.
@@ -356,7 +370,7 @@ resolve_profile_port() {
 
 is_board_name() {
     case "${1:-}" in
-        box3 | esp-box-3 | szpi | szpi-esp32s3 | cores3 | m5stack-cores3) return 0 ;;
+        box3 | esp-box-3 | nanopod | esp32-s3-nanopod | szpi | szpi-esp32s3 | cores3 | m5stack-cores3) return 0 ;;
         watcher | sensecap-watcher) return 0 ;;
         *) return 1 ;;
     esac
@@ -371,6 +385,17 @@ select_board() {
             board_build_dir="$host_build_dir"
             board_defaults=(sdkconfig.s3.defaults sdkconfig.s3-box-3.defaults)
             board_baud="${S3_BAUD:-921600}"
+            board_apps_output_dir="$apps_output_dir"
+            board_apps_store="$apps_store"
+            board_app_store_size="0x0800000"
+            ;;
+        nanopod | esp32-s3-nanopod)
+            board_name="nanopod"
+            board_title="ESP32-S3 NanoPod"
+            board_profile="esp32-s3-nanopod"
+            board_build_dir="$nanopod_host_build_dir"
+            board_defaults=(sdkconfig.s3.defaults sdkconfig.s3-nanopod.defaults)
+            board_baud="${NANOPOD_S3_BAUD:-921600}"
             board_apps_output_dir="$apps_output_dir"
             board_apps_store="$apps_store"
             board_app_store_size="0x0800000"
@@ -409,7 +434,7 @@ select_board() {
             board_app_store_size="0x1800000"
             ;;
         *)
-            echo "Unknown ESP32-S3 board: $1 (expected box3, szpi, cores3, or watcher)" >&2
+            echo "Unknown ESP32-S3 board: $1 (expected box3, nanopod, szpi, cores3, or watcher)" >&2
             exit 2
             ;;
     esac

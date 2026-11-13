@@ -26,8 +26,14 @@ class FirmwareArtifacts(unittest.TestCase):
             'firmware/espressif/main/platform/boards/esp32-s3-box-3/platform.cpp',
         ]), {'esp-box-3'})
         self.assertEqual(self.selected_profiles([
+            'firmware/espressif/main/platform/boards/esp32-s3-nanopod/platform.cpp',
+        ]), {'esp32-s3-nanopod'})
+        self.assertEqual(self.selected_profiles([
+            'firmware/espressif/sdkconfig.s3-nanopod.defaults',
+        ]), {'esp32-s3-nanopod'})
+        self.assertEqual(self.selected_profiles([
             'firmware/espressif/main/platform/boards/esp32-s3-common/display.cpp',
-        ]), {'esp-box-3', 'szpi-esp32s3', 'm5stack-cores3', 'sensecap-watcher'})
+        ]), {'esp-box-3', 'esp32-s3-nanopod', 'szpi-esp32s3', 'm5stack-cores3', 'sensecap-watcher'})
 
     def test_pr_shared_host_inputs_cover_all_release_boards(self):
         for path in ('firmware/espressif/main/platform/transports/log_output_lock.hpp',

@@ -220,11 +220,9 @@ void HallSceneUi::DrawLocked(lv_obj_t* root, const HallSceneLayout& layout, cons
 
     objects_.carousel_viewport = lv_obj_create(root);
     StyleContainer(objects_.carousel_viewport, layout.carousel, 0, theme::kHallBackground);
-    lv_obj_set_scroll_dir(objects_.carousel_viewport, LV_DIR_HOR);
+    // Keep the carousel fixed for touch input; policy-driven selection can still scroll it.
+    lv_obj_set_scrollable(objects_.carousel_viewport, false);
     lv_obj_set_scrollbar_mode(objects_.carousel_viewport, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_set_scrollable(objects_.carousel_viewport, true);
-    lv_obj_set_scroll_momentum(objects_.carousel_viewport, true);
-    lv_obj_set_scroll_elastic(objects_.carousel_viewport, true);
     lv_obj_set_clickable(objects_.carousel_viewport, true);
     if (events.carousel_event != nullptr) {
         lv_obj_add_event_cb(objects_.carousel_viewport, events.carousel_event, LV_EVENT_SCROLL,

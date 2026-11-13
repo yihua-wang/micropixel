@@ -37,7 +37,7 @@
                     and the combined browser image for the selected board.
 
 .PARAMETER Board
-    p4 (default), ksdiy, ksdiy-landscape, box3, szpi, cores3, watch, or s31.
+    p4 (default), ksdiy, ksdiy-landscape, box3, nanopod, szpi, cores3, watch, or s31.
 
 .PARAMETER Port
     Serial port such as COM7. Probed when omitted.
@@ -79,7 +79,7 @@ param(
     [string] $Command,
 
     [Parameter(Position = 1)]
-    [ValidateSet('p4', 'ksdiy', 'ksdiy-landscape', 'box3', 'szpi', 'cores3', 'watch', 's31')]
+    [ValidateSet('p4', 'ksdiy', 'ksdiy-landscape', 'box3', 'nanopod', 'szpi', 'cores3', 'watch', 's31')]
     [string] $Board = 'p4',
 
     [Parameter(Position = 2)]
@@ -110,6 +110,7 @@ $boardProfiles = @{
     'ksdiy-landscape' = @{ Product = 'ksdiy-p4c5-landscape'; Null = 'p4-null'; NullUsesEnvDefaults = $true }
     's31'    = @{ Product = 'esp-mosaico';    Null = 's31-null'; NullUsesEnvDefaults = $true }
     'box3'   = @{ Product = 'esp-box-3';      Null = 's3-null';  NullUsesEnvDefaults = $false }
+    'nanopod' = @{ Product = 'esp32-s3-nanopod'; Null = 's3-null'; NullUsesEnvDefaults = $false }
     'szpi'   = @{ Product = 'szpi-esp32s3';   Null = 's3-null';  NullUsesEnvDefaults = $false }
     'cores3' = @{ Product = 'm5stack-cores3'; Null = 's3-null';  NullUsesEnvDefaults = $false }
     'watch'  = @{ Product = 'sensecap-watcher'; Null = 's3-null'; NullUsesEnvDefaults = $false }

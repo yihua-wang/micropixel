@@ -67,9 +67,7 @@ struct HallSceneLayout final {
     HallScenePoint simple_app_id{};
     int32_t status_text_width{};
     HallStatusBarLayout status_bar{};
-    // Boards with a physical selector need the ring and the list to agree after
-    // a drag or a knock, so the carousel lands on a card. Touch-first boards
-    // keep their free-scrolling carousel by leaving this false.
+    // Physical-selector boards keep the ring aligned with the selected card.
     bool snap_carousel_to_cards{};
     // Cover Flow: cards are centred rather than left-aligned, and the card
     // nearest the centre is full size while its neighbours shrink, dim and

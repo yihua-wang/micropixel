@@ -10,6 +10,14 @@ esp_err_t RegisterLvglDisplay(Landscape320State& state, bool double_buffer) {
     if (state.panel == nullptr || state.panel_io == nullptr || state.display != nullptr) {
         return ESP_ERR_INVALID_ARG;
     }
+    return RegisterLvglDisplay(state.panel, state.panel_io, state.display, kWidth, kHeight, double_buffer);
+}
+
+esp_err_t RegisterLvglDisplay(esp_lcd_panel_handle_t panel, esp_lcd_panel_io_handle_t panel_io, lv_display_t*& display,
+                              int32_t width, int32_t height, bool double_buffer) {
+    if (panel == nullptr || panel_io == nullptr || display != nullptr || width <= 0 || height <= 0) {
+        return ESP_ERR_INVALID_ARG;
+    }
     if (!esp_lv_adapter_is_initialized()) {
         esp_lv_adapter_config_t adapter_config{};
         adapter_config.task_stack_size = 10240U;
@@ -32,12 +40,12 @@ esp_err_t RegisterLvglDisplay(Landscape320State& state, bool double_buffer) {
     }
 
     esp_lv_adapter_display_config_t display_config{};
-    display_config.panel = state.panel;
-    display_config.panel_io = state.panel_io;
+    display_config.panel = panel;
+    display_config.panel_io = panel_io;
     display_config.profile.interface = ESP_LV_ADAPTER_PANEL_IF_OTHER;
     display_config.profile.rotation = ESP_LV_ADAPTER_ROTATE_0;
-    display_config.profile.hor_res = kWidth;
-    display_config.profile.ver_res = kHeight;
+    display_config.profile.hor_res = width;
+    display_config.profile.ver_res = height;
     display_config.profile.buffer_height = CONFIG_MICROPIXEL_LVGL_PARTIAL_BUFFER_HEIGHT;
 #if CONFIG_MICROPIXEL_LVGL_PARTIAL_BUFFER_PSRAM
     display_config.profile.use_psram = true;
@@ -50,11 +58,11 @@ esp_err_t RegisterLvglDisplay(Landscape320State& state, bool double_buffer) {
     display_config.tear_avoid_mode = ESP_LV_ADAPTER_TEAR_AVOID_MODE_NONE;
     display_config.te_sync = {};
     display_config.te_sync.gpio_num = -1;
-    state.display = esp_lv_adapter_register_display(&display_config);
-    if (state.display == nullptr) {
+    display = esp_lv_adapter_register_display(&display_config);
+    if (display == nullptr) {
         return ESP_FAIL;
     }
-    return esp_lcd_panel_disp_on_off(state.panel, true);
+    return esp_lcd_panel_disp_on_off(panel, true);
 }
 
 }  // namespace micropixel::platform::esp32_s3_common

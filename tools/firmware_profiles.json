@@ -188,6 +188,28 @@
     "flash": true,
     "monitor": true
   },
+  "esp32-s3-nanopod": {
+    "description": "ESP32-S3 NanoPod Host",
+    "target": "esp32s3",
+    "chip_markers": [
+      "ESP32-S3"
+    ],
+    "build_dir": "build/host-esp32s3-nanopod",
+    "build_dir_env": "NANOPOD_S3_HOST_BUILD_DIR",
+    "sdkconfig_name": "sdkconfig.release",
+    "sdkconfig_defaults": [
+      "firmware/espressif/sdkconfig.defaults",
+      "firmware/espressif/sdkconfig.s3.defaults",
+      "firmware/espressif/sdkconfig.s3-nanopod.defaults"
+    ],
+    "app_store_size": "0x0800000",
+    "port_env": "NANOPOD_S3_PORT",
+    "baud_env": "NANOPOD_S3_BAUD",
+    "default_baud": 921600,
+    "preview": true,
+    "flash": true,
+    "monitor": true
+  },
   "szpi-esp32s3": {
     "description": "LCKFB SZPI ESP32-S3 Host",
     "target": "esp32s3",

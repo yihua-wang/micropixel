@@ -185,6 +185,7 @@ platform::lvgl::GuestPresentationHooks SquareSystemUiState::GuestFrameHooks() {
 
 lv_obj_t* SquareSystemUiState::EnsureRootLocked(uint32_t background) {
     if (root == nullptr) {
+        lv_obj_set_scrollable(lv_screen_active(), false);
         root = lv_obj_create(lv_screen_active());
         if (root != nullptr) {
             StyleFullscreen(root, background, static_cast<int32_t>(profile.square.width),
